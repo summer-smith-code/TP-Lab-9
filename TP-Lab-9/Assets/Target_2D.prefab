@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 567189581622063439}
   - component: {fileID: 8178232337489440752}
   - component: {fileID: -157930990502899635}
+  - component: {fileID: -400740052754258318}
+  - component: {fileID: -352726173867701233}
   m_Layer: 0
   m_Name: Target_2D
   m_TagString: Enemy
@@ -102,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39da69baaef50fa4da96b839b7357484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetHit: {fileID: 626965220582560966, guid: fe31f070ac6db454081538e6a05bd83f, type: 3}
+  targetHit: {fileID: -400740052754258318}
 --- !u!114 &8178232337489440752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,3 +153,42 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &-400740052754258318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560596887913487933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1cb769932d6aee41b497cf6322c4a40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &-352726173867701233
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560596887913487933}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
