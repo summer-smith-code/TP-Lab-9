@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    internal void UpdateScore(int score)
+    private int score;
+    internal void UpdateScore(int newScore)
     {
+        score += newScore;
         Debug.Log("Score updated: " + score);
     }
   
