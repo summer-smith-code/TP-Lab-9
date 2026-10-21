@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class PlayerShip : MonoBehaviour
 {
@@ -8,7 +9,10 @@ public class PlayerShip : MonoBehaviour
 
     private void Start()
     {
+        // Get the half width of the player sprite to use for clamping movement
         halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
+
+        // Get the main camera and calculate the screen bounds in world coordinates
         Camera mainCamera = Camera.main;
         if (mainCamera != null )
         {
@@ -16,7 +20,6 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKey(KeyCode.A)) transform.position += transform.right * -moveSpeed * Time.deltaTime;
@@ -25,11 +28,20 @@ public class PlayerShip : MonoBehaviour
         clampPlayerMovement();
     }
 
+    // Shoot a bullet from the object pool
     private void Shoot()
     {
-        Debug.Log("Shoot!");    
+        Debug.Log("Shoot!");
+        GameObject bullet = ObjectPool.SharedInstance.GetPooledObject();
+        if (bullet != null)
+        {
+            bullet.transform.position = transform.position;
+            bullet.transform.rotation = transform.rotation;
+            bullet.SetActive(true);
+        }
     }
 
+    //Clamp player movement inside of screen bounds
     private void clampPlayerMovement()
     {
         Vector3 pos = transform.position;
