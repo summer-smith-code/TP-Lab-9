@@ -41,16 +41,4 @@ public class ObjectPool : MonoBehaviour
         }
         return null;
     }
-
-    /*
-     * TO INSTANTIATE BULLET FROM PLAYER SCRIPT:
-     * 
-     * GameObject bullet = ObjectPool.SharedInstance.GetPooledObject();
-     * if (bullet != null
-     * {
-     *      bullet.transform.position = (gun/spawning location).transform.position;
-     *      bullet.transform.rotation = (gun/spawning location).transform.rotation;
-     *      bullet.SetActive(true);
-     * }
-     */
 }
