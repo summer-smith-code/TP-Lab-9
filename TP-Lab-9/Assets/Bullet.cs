@@ -12,8 +12,9 @@ public class Bullet : MonoBehaviour
     }
 
     // When hitting enemy, sets game object as inactive for later re-pooling
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("COLLISSION! " + collision.gameObject.name);
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<TargetHit>().Hit();
