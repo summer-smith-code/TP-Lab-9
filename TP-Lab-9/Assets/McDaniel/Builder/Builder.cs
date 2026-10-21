@@ -4,7 +4,7 @@ public class Builder : MonoBehaviour
 {
     [SerializeField] GameObject targetController;
 
-    public void BuildTargets()
+    public void BuildTarget()
     {
         TargetBuilder builder = new BigTarget();
         builder.BuildTarget();
