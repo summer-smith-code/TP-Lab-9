@@ -6,8 +6,8 @@ public class BigTarget : TargetBuilder
     {
         target = new Target();
 
-        target.points = 5;
+        target.points = 2;
         target.speed = 2;
-        target.size = 5;
+        target.size = 2;
     }
 }

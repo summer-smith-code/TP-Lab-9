@@ -8,6 +8,6 @@ public class GameBoard : MonoBehaviour
 
     private void Start()
     {
-        builder.BuildTargets();
+        builder.BuildTargets(gameSpots);
     }
 }
