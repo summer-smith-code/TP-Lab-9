@@ -7,7 +7,7 @@ public class SmallTarget : TargetBuilder
         target = new Target();
 
         target.points = 5;
-        target.speed = 2;
-        target.size = 0.5f;
+        target.speed = 6;
+        target.size = 0.75f;
     }
 }

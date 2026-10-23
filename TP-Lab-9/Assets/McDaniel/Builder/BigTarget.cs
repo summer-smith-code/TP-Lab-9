@@ -8,6 +8,6 @@ public class BigTarget : TargetBuilder
 
         target.points = 2;
         target.speed = 2;
-        target.size = 2;
+        target.size = 1.5f;
     }
 }
