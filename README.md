@@ -4,3 +4,6 @@ Team: <br>
 - Chandler Guzman
 - Colin McDaniel
 - Colin Pierce
+
+YouTube Video Link:
+https://youtu.be/3macOv1DqN0
