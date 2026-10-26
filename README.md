@@ -7,3 +7,6 @@ Team: <br>
 
 YouTube Video Link:
 https://youtu.be/3macOv1DqN0
+
+Diagrams:
+https://docs.google.com/presentation/d/1ceQioBXIg9ZjcRHCq7lwllDff0DToUXnIGe77N8se1o/edit?usp=sharing
