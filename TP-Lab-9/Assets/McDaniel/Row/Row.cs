@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Row : MonoBehaviour
@@ -5,6 +6,13 @@ public class Row : MonoBehaviour
     //References
     [SerializeField] Builder builder;
     [SerializeField] GameObject endPosition;
+
+    List<Vector3> targetPositions = new();
+    [HideInInspector] public List<Vector3> Targets { get { return targetPositions; } set { targetPositions = Targets; } }
+
+    [HideInInspector] public Vector3 endLPos;
+    [HideInInspector] public Vector3 endRPos;
+    [HideInInspector] public bool newGame;
 
     //Spacing
     [SerializeField] float spaceBetween;
@@ -20,12 +28,20 @@ public class Row : MonoBehaviour
             builder = GameObject.FindFirstObjectByType<Builder>();
     }
 
-    private void Start()
+    public void StartBuild(bool newGame)
     {
-        BuildRow();
+        if (newGame)
+        {
+            print("newGame");
+            BuildRow();
+        }
+        else
+        {
+            print("not");
+        }
     }
 
-    public void BuildRow()
+    private void BuildRow()
     {
         if (builder == null)
             return;
@@ -36,6 +52,7 @@ public class Row : MonoBehaviour
         //Build first target
         builder.BuildTarget(new Vector3(xPosition, transform.position.y, 0), targetType, direction);
         amountPerRow--;
+        targetPositions.Add(new Vector3(xPosition, transform.position.y, 0));
 
         float xPosition2 = transform.position.x;
 
@@ -47,6 +64,7 @@ public class Row : MonoBehaviour
             //Build target at row
             builder.BuildTarget(new Vector3(xPosition, transform.position.y, 0), targetType, direction);
             amountPerRow--;
+            targetPositions.Add(new Vector3(xPosition, transform.position.y, 0));
 
             //Check if can still build target
             if (amountPerRow <= 0)
@@ -57,6 +75,7 @@ public class Row : MonoBehaviour
 
             //Build target at row
             builder.BuildTarget(new Vector3(xPosition2, transform.position.y, 0), targetType, direction);
+            targetPositions.Add(new Vector3(xPosition2, transform.position.y, 0));
             amountPerRow--;
         }
 
@@ -64,10 +83,15 @@ public class Row : MonoBehaviour
         xPosition += spaceBetween;
 
         //Spawn in the endPosition 
-        GameObject firstEnd = Instantiate(endPosition, new Vector3(xPosition, transform.position.y, 0), transform.rotation);
-        GameObject secondEnd = Instantiate(endPosition, new Vector3(xPosition2, transform.position.y, 0), transform.rotation);
+        GameObject endR = Instantiate(endPosition, new Vector3(xPosition, transform.position.y, 0), transform.rotation);
+        GameObject endL = Instantiate(endPosition, new Vector3(xPosition2, transform.position.y, 0), transform.rotation);
 
-        firstEnd.GetComponent<EndPosition>().ConnectEndPositions(secondEnd, direction, Direction.Right);
+        endLPos = new Vector3(xPosition, transform.position.y, 0);
+        endRPos = new Vector3(xPosition2, transform.position.y, 0);
+
+        endR.GetComponent<EndPosition>().ConnectEndPositions(endL, direction, Direction.Right);
+
+        newGame = false;
     }
 }
 
