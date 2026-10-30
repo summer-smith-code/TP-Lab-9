@@ -47,9 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   builder: {fileID: 0}
   endPosition: {fileID: 5591245164671711136, guid: d1b05d0263814ac4796f208337003273, type: 3}
-  endL: {fileID: 0}
-  endR: {fileID: 0}
+  targetPositions: []
+  endLPos: {x: 0, y: 0, z: 0}
+  endRPos: {x: 0, y: 0, z: 0}
   newGame: 0
+  _saveID: Row1
   spaceBetween: 5
   amountPerRow: 10
   targetType: 0

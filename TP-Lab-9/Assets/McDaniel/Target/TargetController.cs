@@ -29,4 +29,9 @@ public class TargetController : MonoBehaviour
         //Set scale;
         transform.localScale *= target.size;
     }
+
+    public void OnDestroy()
+    {
+        
+    }
 }

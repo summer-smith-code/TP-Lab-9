@@ -8,12 +8,8 @@ using UnityEngine.SceneManagement;
 
 public static class SavingService
 {
-    private const string ACTIVE_SCENE_KEY = "activeScene";
-    private const string SCENES_KEY = "scenes";
     private const string OBJECTS_KEY = "objects";
     private const string SAVEID_KEY = "$saveID";
-
-    private static UnityAction<UnityEngine.SceneManagement.Scene, LoadSceneMode> LoadObjectsAfterSceneLoad;
 
     public static void SaveGame(string fileName) {
         //Saving Enemies
@@ -44,15 +40,6 @@ public static class SavingService
             Debug.LogWarningFormat("The scene did not include any saveable objects.");
         }
 
-        var openScenes = new JsonData();
-        var sceneCount = SceneManager.sceneCount;
-        for(int i = 0; i < sceneCount; i++)
-        {
-            var scene = SceneManager.GetSceneAt(i);
-        }
-        result[SCENES_KEY] = openScenes;
-        result[ACTIVE_SCENE_KEY] = SceneManager.GetActiveScene().name;
-
         var outputPath = Path.Combine(Application.persistentDataPath, fileName);
         var writer = new JsonWriter();
         writer.PrettyPrint = true;
@@ -64,12 +51,14 @@ public static class SavingService
         System.GC.Collect();
     }
 
-    public static bool LoadGame(string fileName) {
+    public static bool LoadGame(string fileName) 
+    {
         //Loading Enemies
         var dataPath = Path.Combine(Application.persistentDataPath, fileName);
         if (File.Exists(dataPath) == false) 
         { 
-            Debug.LogErrorFormat("No file exists at {0}", dataPath); return false; 
+            Debug.LogErrorFormat("No file exists at {0}", dataPath); 
+            return false; 
         }
 
         var text = File.ReadAllText(dataPath);
@@ -80,68 +69,25 @@ public static class SavingService
             return false; 
         }
 
-        if (!data.ContainsKey("scenes"))
-        {
-            Debug.LogWarningFormat("Data at {0} does not contain any scenes; not loading any!", dataPath);
-            return false; 
-        }
-
-        var scenes = data[SCENES_KEY];
-        int sceneCount = scenes.Count;
-        if (sceneCount == 0)
-        {
-            Debug.LogWarningFormat("Data at {0} doesn't specify any scenes to load.", dataPath); 
-            return false;
-        }
-
-        for (int i = 0; i < sceneCount; i++)
-        {
-            var scene = (string)scenes[i];
-            if (i == 0) 
-            { 
-                SceneManager.LoadScene(scene, LoadSceneMode.Single); 
-            }
-            else 
-            { 
-                SceneManager.LoadScene(scene, LoadSceneMode.Additive); 
-            }
-        }
-        if (data.ContainsKey(ACTIVE_SCENE_KEY))
-        {
-            var activeSceneName = (string)data[ACTIVE_SCENE_KEY];
-            var activeScene = SceneManager.GetSceneByName(activeSceneName);
-            if (activeScene.IsValid() == false)
-            {
-                Debug.LogErrorFormat("Data at {0} specifies an active scene that doesn't exist. Stopping loading here.", dataPath); return false;
-            }
-            SceneManager.SetActiveScene(activeScene);
-        }
-        else
-        {
-            Debug.LogWarningFormat("Data at {0} does not specify an active scene.", dataPath);
-        }
         if (data.ContainsKey(OBJECTS_KEY))
         {
             var objects = data[OBJECTS_KEY];
-            LoadObjectsAfterSceneLoad = (scene, loadSceneMode) => {
-                var allLoadableObjects = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>().ToDictionary(o => o.SaveID, o => o);
-                var objectsCount = objects.Count;
-                for (int i = 0; i < objectsCount; i++)
+            
+            var allLoadableObjects = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>().ToDictionary(o => o.SaveID, o => o);
+            var objectsCount = objects.Count;
+            for (int i = 0; i < objectsCount; i++)
+            {
+                var objectData = objects[i];
+                var saveID = (string)objectData[SAVEID_KEY];
+                if (allLoadableObjects.ContainsKey(saveID))
                 {
-                    var objectData = objects[i];
-                    var saveID = (string)objectData[SAVEID_KEY];
-                    if (allLoadableObjects.ContainsKey(saveID))
-                    {
-                        var loadableObject = allLoadableObjects[saveID];
-                        loadableObject.LoadFromData(objectData);
-                    }
+                    var loadableObject = allLoadableObjects[saveID];
+                    loadableObject.LoadFromData(objectData);
                 }
-                SceneManager.sceneLoaded -= LoadObjectsAfterSceneLoad;
-                LoadObjectsAfterSceneLoad = null;
+            }
                 System.GC.Collect();
-            };
-            SceneManager.sceneLoaded += LoadObjectsAfterSceneLoad;
         }
+
         return true;
     }
 }

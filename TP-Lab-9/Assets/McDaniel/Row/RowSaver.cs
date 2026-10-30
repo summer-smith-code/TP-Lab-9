@@ -11,11 +11,11 @@ public class RowSaver : MonoBehaviour, ISaveable
     private const string RIGHT_END_KEY = "rightEnd";
     private const string NEW_GAME_KEY = "newGame";
 
-    public string SaveID { get; }
+    [SerializeField] public string SaveID { get { return row._saveID; } }
     public JsonData SavedData { 
         get {
             var result = new JsonData();
-            result[ENEMIES_KEY] = SerializeValue(row.Targets);
+            result[ENEMIES_KEY] = SerializeValue(new TargetData { targets = row.GetTargetTranforms() });
             result[LEFT_END_KEY] = SerializeValue(row.endLPos);
             result[RIGHT_END_KEY] = SerializeValue(row.endRPos);
             result[NEW_GAME_KEY] = SerializeValue(row.newGame);
@@ -38,8 +38,12 @@ public class RowSaver : MonoBehaviour, ISaveable
 
     public void LoadFromData(JsonData data)
     {
+        print("Loading");
         if (data.ContainsKey(ENEMIES_KEY))
-            row.Targets = JsonMapper.ToObject<List<Vector3>>(data[ENEMIES_KEY].ToJson());
+        {
+            TargetData targetData = JsonMapper.ToObject<TargetData>(data[ENEMIES_KEY].ToJson());
+            row.targetPositions = targetData.targets;
+        }
 
         if (data.ContainsKey(LEFT_END_KEY))
             row.endLPos = JsonMapper.ToObject<Vector3>(data[LEFT_END_KEY].ToJson());
@@ -52,4 +56,10 @@ public class RowSaver : MonoBehaviour, ISaveable
 
         row.StartBuild(row.newGame);
     }
+}
+
+[System.Serializable]
+public class TargetData
+{
+    public List<Vector3> targets;
 }
