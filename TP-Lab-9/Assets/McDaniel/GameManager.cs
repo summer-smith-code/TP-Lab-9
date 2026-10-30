@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     void Start()
     {
-        if(!SavingService.LoadGame("SnoopPoop"))
+        if(!SavingService.LoadGame("TPLab9"))
         {
             print("Hello");
             foreach(Row row in GameObject.FindObjectsByType<Row>(FindObjectsSortMode.None))
@@ -16,6 +16,6 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SavingService.SaveGame("SnoopPoop");
+        SavingService.SaveGame("TPLab9");
     }
 }
