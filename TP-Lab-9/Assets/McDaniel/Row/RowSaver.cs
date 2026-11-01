@@ -39,6 +39,9 @@ public class RowSaver : MonoBehaviour, ISaveable
     public void LoadFromData(JsonData data)
     {
         print("Loading");
+
+        row.ClearRow();
+
         if (data.ContainsKey(ENEMIES_KEY))
         {
             TargetData targetData = JsonMapper.ToObject<TargetData>(data[ENEMIES_KEY].ToJson());

@@ -15,6 +15,9 @@ public class Row : MonoBehaviour
     [HideInInspector] public Vector3 endRPos;
     [HideInInspector] public bool newGame;
 
+    private GameObject endL;
+    private GameObject endR;
+
     public string _saveID;
 
     //Spacing
@@ -49,16 +52,19 @@ public class Row : MonoBehaviour
         if (builder == null)
             return;
 
+        int remainingTargets = amountPerRow;
+
         //Initial spot
         float xPosition = transform.position.x;
+        float xPosition2 = transform.position.x; ;
 
         //Build first target
         targets.Add(builder.BuildTarget(new Vector3(xPosition, transform.position.y, 0), targetType, direction));
         amountPerRow--;
 
-        float xPosition2 = transform.position.x;
+        remainingTargets--;
 
-        while(amountPerRow > 0)
+        while (remainingTargets > 0)
         {
             //Go to next position
             xPosition += spaceBetween;
@@ -67,8 +73,10 @@ public class Row : MonoBehaviour
             targets.Add(builder.BuildTarget(new Vector3(xPosition, transform.position.y, 0), targetType, direction));
             amountPerRow--;
 
+            remainingTargets--;
+
             //Check if can still build target
-            if (amountPerRow <= 0)
+            if (remainingTargets <= 0)
                 break;
 
             //Go to next position
@@ -77,14 +85,16 @@ public class Row : MonoBehaviour
             //Build target at row
             targets.Add(builder.BuildTarget(new Vector3(xPosition2, transform.position.y, 0), targetType, direction));
             amountPerRow--;
+
+            remainingTargets--;
         }
 
         //Go to next positions
         xPosition += spaceBetween;
 
         //Spawn in the endPosition 
-        GameObject endR = Instantiate(endPosition, new Vector3(xPosition, transform.position.y, 0), transform.rotation);
-        GameObject endL = Instantiate(endPosition, new Vector3(xPosition2, transform.position.y, 0), transform.rotation);
+        endR = Instantiate(endPosition, endRPos, transform.rotation);
+        endL = Instantiate(endPosition, endLPos, transform.rotation);
 
         endLPos = new Vector3(xPosition, transform.position.y, 0);
         endRPos = new Vector3(xPosition2, transform.position.y, 0);
@@ -109,8 +119,8 @@ public class Row : MonoBehaviour
             targets.Add(builder.BuildTarget(target, targetType, direction));
         }
 
-        GameObject endR = Instantiate(endPosition, endRPos, transform.rotation);
-        GameObject endL = Instantiate(endPosition, endLPos, transform.rotation);
+        endR = Instantiate(endPosition, endRPos, transform.rotation);
+        endL = Instantiate(endPosition, endLPos, transform.rotation);
 
         endL.GetComponent<EndPosition>().ConnectEndPositions(endR, direction, Direction.Right);
     }
@@ -127,6 +137,33 @@ public class Row : MonoBehaviour
         }
 
         return newTransforms;
+    }
+
+    // For saving, destroys enemies in scene
+    public void ClearRow()
+    {
+        foreach (GameObject target in targets)
+        {
+            if (target != null)
+            {
+                Destroy(target);
+            }
+        }
+
+        targets.Clear();
+
+        if (endL != null)
+        {
+            Destroy(endL);
+        }
+
+        if (endR != null)
+        {
+            Destroy(endR);
+        }
+
+        endL = null;
+        endR = null;
     }
 }
 

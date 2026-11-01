@@ -15,6 +15,10 @@ public static class SavingService
         //Saving Enemies
         var result = new JsonData();
         var allSaveableObjects = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>();
+        foreach (var obj in allSaveableObjects)
+        {
+            Debug.Log("Found saveable object: " + obj.SaveID);
+        }
         if (allSaveableObjects.Count() > 0)
         {
             var savedObjects = new JsonData();
@@ -57,7 +61,7 @@ public static class SavingService
         var dataPath = Path.Combine(Application.persistentDataPath, fileName);
         if (File.Exists(dataPath) == false) 
         { 
-            Debug.LogErrorFormat("No file exists at {0}", dataPath); 
+            Debug.LogErrorFormat("No file exists at {0}", dataPath);
             return false; 
         }
 
@@ -79,11 +83,20 @@ public static class SavingService
             {
                 var objectData = objects[i];
                 var saveID = (string)objectData[SAVEID_KEY];
+
+                Debug.Log("Attempting to load: " + saveID);
+
                 if (allLoadableObjects.ContainsKey(saveID))
                 {
                     var loadableObject = allLoadableObjects[saveID];
                     loadableObject.LoadFromData(objectData);
+                    Debug.Log("Successfully loaded: " + saveID);
                 }
+                else
+                {
+                    Debug.LogWarning("Could not find an object with SaveID: " + saveID);
+                }
+
             }
                 System.GC.Collect();
         }

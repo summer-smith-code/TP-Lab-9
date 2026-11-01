@@ -5,14 +5,64 @@ using UnityEngine.SceneManagement;
 public class SaveLoadInput : MonoBehaviour
 {
     // Save file name 
-    [SerializeField] private String saveID;
+    public string saveID;
+
+    // For binary score file
+    public Score scoreManager;
+
+    // For saving the Score Manager
+    private void Start()
+    {
+        scoreManager = FindFirstObjectByType<Score>();
+
+        if (scoreManager != null)
+        {
+            // Load score when the game starts
+            scoreManager.LoadScore(saveID + "_score.dat");
+        }
+    }
 
     void Update()
     {
-        // When player presses S, game is saved 
-        if (Input.GetKey(KeyCode.S)) SavingService.SaveGame(saveID);
+        // Save game when S is pressed
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SaveGame();
+        }
 
-        // When player presses L, loads save by re-loading scene
-        if (Input.GetKey(KeyCode.L)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // Reload scene when L is pressed
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadGame();
+        }
+    }
+
+    private void SaveGame()
+    {
+        Debug.Log("Saving game...");
+
+        SavingService.SaveGame(saveID);
+
+        if (scoreManager != null)
+        {
+            scoreManager.SaveScore(saveID + "_score.dat");
+        }
+
+        Debug.Log("Game saved!");
+    }
+
+    private void LoadGame()
+    {
+        Debug.Log("Loading game...");
+
+        SavingService.LoadGame(saveID);
+
+        if (scoreManager != null)
+        {
+            scoreManager.LoadScore(saveID + "_score.dat");
+        }
+
+        Debug.Log("Game loaded!");
     }
 }
