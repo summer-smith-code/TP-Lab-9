@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class RowSaver : MonoBehaviour, ISaveable
 {
+    //References
     [SerializeField] Row row;
 
+    //Save keys
     private const string ENEMIES_KEY = "enemies";
     private const string LEFT_END_KEY = "leftEnd";
     private const string RIGHT_END_KEY = "rightEnd";
     private const string NEW_GAME_KEY = "newGame";
 
+    //Save Id
     [SerializeField] public string SaveID { get { return row._saveID; } }
+
+    //Save data
     public JsonData SavedData { 
         get {
             var result = new JsonData();
@@ -25,38 +30,46 @@ public class RowSaver : MonoBehaviour, ISaveable
 
     void Awake()
     {
-        if(row == null)
+        //Get row if not set
+        if (row == null)
         {
             row = GetComponent<Row>();
         }
     }
 
+    //Serializes values to Json objects
     private JsonData SerializeValue(object obj)
     {
         return JsonMapper.ToObject(JsonUtility.ToJson(obj));
     }
 
+    //Loads data from save
     public void LoadFromData(JsonData data)
     {
         print("Loading");
 
+        //Removes all enemies from row
         row.ClearRow();
 
+        //Spawns in enemies
         if (data.ContainsKey(ENEMIES_KEY))
         {
             TargetData targetData = JsonMapper.ToObject<TargetData>(data[ENEMIES_KEY].ToJson());
             row.targetPositions = targetData.targets;
         }
 
+        //Spawns in ends
         if (data.ContainsKey(LEFT_END_KEY))
             row.endLPos = JsonMapper.ToObject<Vector3>(data[LEFT_END_KEY].ToJson());
 
         if (data.ContainsKey(RIGHT_END_KEY))
             row.endRPos = JsonMapper.ToObject<Vector3>(data[RIGHT_END_KEY].ToJson());
 
+        //Spawns in if game is a new game
         if (data.ContainsKey(NEW_GAME_KEY))
             row.newGame = JsonMapper.ToObject<bool>(data[NEW_GAME_KEY].ToJson());
 
+        //Build row
         row.StartBuild(row.newGame);
     }
 }

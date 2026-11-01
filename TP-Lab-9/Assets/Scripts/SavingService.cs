@@ -12,7 +12,6 @@ public static class SavingService
     private const string SAVEID_KEY = "$saveID";
 
     public static void SaveGame(string fileName) {
-        //Saving Enemies
         var result = new JsonData();
         var allSaveableObjects = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>();
         foreach (var obj in allSaveableObjects)

@@ -36,11 +36,13 @@ public class Row : MonoBehaviour
 
     public void StartBuild(bool newGame)
     {
+        //If new game build new row
         if (newGame)
         {
             print("newGame");
             BuildRow();
         }
+        //Else rebuild row based on loaded data
         else
         {
             RebuildRow();
@@ -92,37 +94,34 @@ public class Row : MonoBehaviour
         //Go to next positions
         xPosition += spaceBetween;
 
+
+        endRPos = new Vector3(xPosition, transform.position.y, 0);
+        endLPos = new Vector3(xPosition2, transform.position.y, 0);
+
         //Spawn in the endPosition 
         endR = Instantiate(endPosition, endRPos, transform.rotation);
         endL = Instantiate(endPosition, endLPos, transform.rotation);
-
-        endLPos = new Vector3(xPosition, transform.position.y, 0);
-        endRPos = new Vector3(xPosition2, transform.position.y, 0);
 
         endR.GetComponent<EndPosition>().ConnectEndPositions(endL, direction, Direction.Right);
 
         newGame = false;
     }
 
+    //Rebuilds the row
     private void RebuildRow()
     {
-        if (targetPositions.Count == 0)
-        {
-            BuildRow();
-            return;
-        }
-
-        print("Re");
-
+        //Place targets 
         foreach(Vector3 target in targetPositions)
         {
             targets.Add(builder.BuildTarget(target, targetType, direction));
         }
 
+        //Place ends
         endR = Instantiate(endPosition, endRPos, transform.rotation);
         endL = Instantiate(endPosition, endLPos, transform.rotation);
 
-        endL.GetComponent<EndPosition>().ConnectEndPositions(endR, direction, Direction.Right);
+        //Connect end positions
+        endR.GetComponent<EndPosition>().ConnectEndPositions(endL, direction, Direction.Right);
     }
 
     public List<Vector3> GetTargetTranforms()
