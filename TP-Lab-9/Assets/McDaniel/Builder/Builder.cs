@@ -4,7 +4,7 @@ public class Builder : MonoBehaviour
 {
     [SerializeField] GameObject targetController;
 
-    public void BuildTarget(Vector3 position, TargetType targetType, Direction direction)
+    public GameObject BuildTarget(Vector3 position, TargetType targetType, Direction direction)
     {
         TargetBuilder builder = null;
 
@@ -20,9 +20,12 @@ public class Builder : MonoBehaviour
                 builder = new SmallTarget();
                 break;
         }
+
         builder.BuildTarget();
         GameObject controller = Instantiate(targetController, position, transform.rotation);
 
         controller.GetComponent<TargetController>().AddTarget(builder.Target, direction);
+
+        return controller;
     }
 }
