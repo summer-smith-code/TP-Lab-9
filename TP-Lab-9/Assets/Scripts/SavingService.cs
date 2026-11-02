@@ -8,9 +8,11 @@ using UnityEngine.SceneManagement;
 
 public static class SavingService
 {
+    // Constants for JSON keys
     private const string OBJECTS_KEY = "objects";
     private const string SAVEID_KEY = "$saveID";
 
+    // Saves all ISaveable objects in the scene to a JSON file with the given fileName.
     public static void SaveGame(string fileName) {
         var result = new JsonData();
         var allSaveableObjects = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>();
@@ -54,6 +56,7 @@ public static class SavingService
         System.GC.Collect();
     }
 
+    // Loads all ISaveable objects in the scene from a JSON file with the given fileName.
     public static bool LoadGame(string fileName) 
     {
         //Loading Enemies
